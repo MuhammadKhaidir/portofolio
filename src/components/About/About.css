@@ -1,0 +1,30 @@
+.about-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10%;
+}
+
+.about-content h3 {
+  margin: 0;
+  font-size: clamp(45px, 5vw, 75px);
+  line-height: 0.95;
+  letter-spacing: -4px;
+}
+
+.about-text {
+  max-width: 500px;
+}
+
+.about-text p {
+  color: #999;
+  font-size: 17px;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+@media (max-width: 800px) {
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}

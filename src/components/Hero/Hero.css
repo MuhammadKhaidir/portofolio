@@ -1,0 +1,88 @@
+.hero {
+  min-height: calc(100vh - 80px);
+  padding: 0 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.hero-label {
+  color: #777;
+  font-size: 12px;
+  letter-spacing: 4px;
+  margin-bottom: 25px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(70px, 10vw, 150px);
+  line-height: 0.85;
+  letter-spacing: -7px;
+}
+
+.hero h1 span {
+  color: #777;
+}
+
+.hero-description {
+  color: #999;
+  line-height: 1.7;
+  margin-top: 35px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.hero-primary,
+.hero-secondary {
+  padding: 15px 25px;
+  font-size: 13px;
+}
+
+.hero-primary {
+  background: white;
+  color: black;
+}
+
+.hero-secondary {
+  border: 1px solid #444;
+}
+
+.hero-decoration {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.hero-circle {
+  width: 300px;
+  height: 300px;
+  border: 1px solid #333;
+  border-radius: 50%;
+}
+
+.hero-decoration span {
+  position: absolute;
+  font-size: 120px;
+  font-weight: 800;
+  color: #151515;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    min-height: 700px;
+  }
+
+  .hero-decoration {
+    position: absolute;
+    right: -180px;
+    opacity: 0.5;
+  }
+}
