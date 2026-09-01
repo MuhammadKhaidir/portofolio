@@ -5,6 +5,27 @@
   align-items: center;
   justify-content: space-between;
   position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.35) 55%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-label {
@@ -53,26 +74,22 @@
 }
 
 .hero-decoration {
-  width: 400px;
-  height: 400px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 320px;
+  height: min(70vh, 640px);
   position: relative;
+  z-index: 1;
 }
 
-.hero-circle {
-  width: 300px;
-  height: 300px;
-  border: 1px solid #333;
-  border-radius: 50%;
-}
-
-.hero-decoration span {
+.hero-character {
   position: absolute;
-  font-size: 120px;
-  font-weight: 800;
-  color: #151515;
+  left: 50%;
+  width: 110px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  transition: top 0.12s linear;
+  image-rendering: pixelated;
+  pointer-events: none;
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
 }
 
 @media (max-width: 800px) {
@@ -82,7 +99,7 @@
 
   .hero-decoration {
     position: absolute;
-    right: -180px;
+    right: -140px;
     opacity: 0.5;
   }
 }
