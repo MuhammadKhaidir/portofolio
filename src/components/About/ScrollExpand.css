@@ -47,7 +47,7 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.1) 45%, rgba(0, 0, 0, 0.35));
+  background: linear-gradient(to top, rgba(230, 225, 225, 0.75), rgba(218, 207, 147, 0.933) 45%, rgba(237, 234, 234, 0.922));
   opacity: 0;
 }
 
