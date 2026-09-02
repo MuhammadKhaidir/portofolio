@@ -1,14 +1,25 @@
-.hero {
-  min-height: calc(100vh - 80px);
-  padding: 0 7%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.hero-scroll-wrapper {
   position: relative;
+  /* total tinggi = tinggi hero (yang nempel) + jarak buat animasi jalan.
+     angka ke-2 (120vh) atur "seberapa lama" karakter jalan sebelum About muncul */
+  height: calc(100vh - 80px + 120vh);
+}
+
+.hero {
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
+  padding: 0 7%;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* kolom 3 sengaja dikosongin, biar kolom tengah beneran di tengah */
+  align-items: center;
+  column-gap: 0px;
+  margin-left: -100px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
+
 
 .hero-overlay {
   position: absolute;
@@ -24,6 +35,7 @@
 }
 
 .hero-content {
+  grid-column: 1;
   position: relative;
   z-index: 1;
 }
@@ -74,6 +86,7 @@
 }
 
 .hero-decoration {
+  grid-column: 2;
   width: 320px;
   height: min(70vh, 640px);
   position: relative;
@@ -84,17 +97,25 @@
   position: absolute;
   left: 50%;
   width: 110px;
-  height: auto;
+  height: 150px; /* tinggi tetap, biar box-nya gak berubah pas ganti sprite idle/jalan */
   transform: translate(-50%, -50%);
-  transition: top 0.12s linear;
+  transition: top 0.12s linear, opacity 0.25s ease;
   image-rendering: pixelated;
   pointer-events: none;
+  object-fit: contain; /* gambar tetap "nempel" ditengah box walau rasio GIF beda-beda */
   filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
 }
 
 @media (max-width: 800px) {
+  .hero-scroll-wrapper {
+    height: calc(100vh - 80px + 60vh);
+  }
+
   .hero {
+    height: auto;
     min-height: 700px;
+    display: flex;
+    justify-content: space-between;
   }
 
   .hero-decoration {

@@ -10,11 +10,15 @@ import charIdle from '../../assets/IdleFront.gif'
 const STAGE_TOP_MIN = 12 // % posisi paling atas character
 const STAGE_TOP_MAX = 85 // % posisi paling bawah character
 const IDLE_DELAY = 200 // ms, jeda sebelum dianggap "berhenti scroll"
+const STICKY_TOP_OFFSET = 80 // px, HARUS SAMA dengan `top` di .hero pada CSS (tinggi navbar)
 
 function Hero() {
   const [charState, setCharState] = useState('idle') // 'idle' | 'down' | 'up'
   const [charTop, setCharTop] = useState(STAGE_TOP_MIN)
+  const [charVisible, setCharVisible] = useState(true)
 
+  const wrapperRef = useRef(null)
+  const heroRef = useRef(null)
   const idleTimeoutRef = useRef(null)
   const lastScrollYRef = useRef(0)
   const tickingRef = useRef(false)
@@ -23,16 +27,27 @@ function Hero() {
     lastScrollYRef.current = window.scrollY
 
     const updateCharacter = () => {
+      const wrapperEl = wrapperRef.current
+      const heroEl = heroRef.current
+      if (!wrapperEl || !heroEl) return
+
+      const wrapperRect = wrapperEl.getBoundingClientRect()
+      const heroHeight = heroEl.offsetHeight
+
+      // seberapa jauh "jalur scroll" buat animasi jalan si karakter
+      const scrollableRange = wrapperRect.height - heroHeight
+      // seberapa jauh udah discroll sejak hero mulai nempel (sticky)
+      const scrolledIntoPin = STICKY_TOP_OFFSET - wrapperRect.top
+
+      const rawProgress =
+        scrollableRange > 0 ? scrolledIntoPin / scrollableRange : 0
+      const progress = Math.min(1, Math.max(0, rawProgress))
+
+      setCharTop(STAGE_TOP_MIN + progress * (STAGE_TOP_MAX - STAGE_TOP_MIN))
+      // progress 1 = mentok bawah -> karakter ngilang, giliran About muncul
+      setCharVisible(progress < 1)
+
       const scrollY = window.scrollY
-      const maxScroll =
-        document.documentElement.scrollHeight - window.innerHeight
-      const progress = maxScroll > 0 ? scrollY / maxScroll : 0
-      const clampedProgress = Math.min(1, Math.max(0, progress))
-
-      setCharTop(
-        STAGE_TOP_MIN + clampedProgress * (STAGE_TOP_MAX - STAGE_TOP_MIN)
-      )
-
       if (scrollY > lastScrollYRef.current) {
         setCharState('down')
       } else if (scrollY < lastScrollYRef.current) {
@@ -57,9 +72,11 @@ function Hero() {
 
     updateCharacter()
     window.addEventListener('scroll', handleScroll, { passive: true })
+    window.addEventListener('resize', updateCharacter)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+      window.removeEventListener('resize', updateCharacter)
       clearTimeout(idleTimeoutRef.current)
     }
   }, [])
@@ -72,46 +89,48 @@ function Hero() {
       : charIdle
 
   return (
-    <section
-      id="home"
-      className="hero"
-      style={{ backgroundImage: `url(${corridorBg})` }}
-    >
-      <div className="hero-overlay"></div>
+    <section id="home" className="hero-scroll-wrapper" ref={wrapperRef}>
+      <div
+        className="hero"
+        ref={heroRef}
+        style={{ backgroundImage: `url(${corridorBg})` }}
+      >
+        <div className="hero-overlay"></div>
 
-      <div className="hero-content">
-        <p className="hero-label">HELLO, I'M</p>
+        <div className="hero-content">
+          <p className="hero-label">HELLO, I'M</p>
 
-        <h1>
-          Muhammad
-          <br />
-          <span>Khaidir.</span>
-        </h1>
+          <h1>
+            Muhammad
+            <br />
+            <span>Khaidir.</span>
+          </h1>
 
-        <p className="hero-description">
-          Informatics Management student &
-          <br />
-          aspiring Full-Stack Web Developer.
-        </p>
+          <p className="hero-description">
+            Informatics Management student &
+            <br />
+            aspiring Full-Stack Web Developer.
+          </p>
 
-        <div className="hero-buttons">
-          <a href="#projects" className="hero-primary">
-            View My Work
-          </a>
+          <div className="hero-buttons">
+            <a href="#projects" className="hero-primary">
+              View My Work
+            </a>
 
-          <a href="#contact" className="hero-secondary">
-            Contact Me
-          </a>
+            <a href="#contact" className="hero-secondary">
+              Contact Me
+            </a>
+          </div>
         </div>
-      </div>
 
-      <div className="hero-decoration">
-        <img
-          src={charSprite}
-          alt="Walking character"
-          className="hero-character"
-          style={{ top: `${charTop}%` }}
-        />
+        <div className="hero-decoration">
+          <img
+            src={charSprite}
+            alt="Walking character"
+            className="hero-character"
+            style={{ top: `${charTop}%`, opacity: charVisible ? 1 : 0 }}
+          />
+        </div>
       </div>
     </section>
   )
