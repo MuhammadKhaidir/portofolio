@@ -14,12 +14,10 @@
   grid-template-columns: 1fr auto 1fr; /* kolom 3 sengaja dikosongin, biar kolom tengah beneran di tengah */
   align-items: center;
   column-gap: 0px;
-  margin-left: -100px;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
-
 
 .hero-overlay {
   position: absolute;
@@ -36,6 +34,7 @@
 
 .hero-content {
   grid-column: 1;
+  min-width: 0; /* biar track 1fr gak "dipaksa" lebar sama isi teks */
   position: relative;
   z-index: 1;
 }
@@ -45,17 +44,6 @@
   font-size: 12px;
   letter-spacing: 4px;
   margin-bottom: 25px;
-}
-
-.hero h1 {
-  margin: 0;
-  font-size: clamp(70px, 10vw, 150px);
-  line-height: 0.85;
-  letter-spacing: -7px;
-}
-
-.hero h1 span {
-  color: #777;
 }
 
 .hero-description {
@@ -104,6 +92,14 @@
   pointer-events: none;
   object-fit: contain; /* gambar tetap "nempel" ditengah box walau rasio GIF beda-beda */
   filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.45));
+}
+
+.scene-blackout {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 50; /* naikkan/turunkan kalau mau overlay ini nutupin/gak nutupin navbar */
+  pointer-events: none;
 }
 
 @media (max-width: 800px) {

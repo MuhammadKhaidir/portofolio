@@ -28,3 +28,12 @@
     gap: 40px;
   }
 }
+
+/* .scroll-expand__overlay itu flex + text-align:center, jadi ini nge-fix
+   biar .about-content dapet lebar yang jelas (grid gak collapse) dan
+   teksnya balik left-align kayak desain aslinya */
+.about-scroll-expand .about-content {
+  width: 100%;
+  max-width: 1100px;
+  text-align: left;
+}

@@ -11,11 +11,13 @@ const STAGE_TOP_MIN = 12 // % posisi paling atas character
 const STAGE_TOP_MAX = 85 // % posisi paling bawah character
 const IDLE_DELAY = 200 // ms, jeda sebelum dianggap "berhenti scroll"
 const STICKY_TOP_OFFSET = 80 // px, HARUS SAMA dengan `top` di .hero pada CSS (tinggi navbar)
+const FADE_DISTANCE = 250 // px, seberapa jauh (sebelum & sesudah titik sambung) dip-to-black berlangsung
 
 function Hero() {
   const [charState, setCharState] = useState('idle') // 'idle' | 'down' | 'up'
   const [charTop, setCharTop] = useState(STAGE_TOP_MIN)
   const [charVisible, setCharVisible] = useState(true)
+  const [blackout, setBlackout] = useState(0) // 0-1, opacity transisi dip-to-black
 
   const wrapperRef = useRef(null)
   const heroRef = useRef(null)
@@ -46,6 +48,17 @@ function Hero() {
       setCharTop(STAGE_TOP_MIN + progress * (STAGE_TOP_MAX - STAGE_TOP_MIN))
       // progress 1 = mentok bawah -> karakter ngilang, giliran About muncul
       setCharVisible(progress < 1)
+
+      // overshoot = 0 persis di titik sambungan hero -> about.
+      // negatif = masih di dalam hero, positif = udah masuk area About.
+      const overshoot =
+        scrollableRange > 0 ? scrolledIntoPin - scrollableRange : 0
+
+      let overlayOpacity = 0
+      if (overshoot > -FADE_DISTANCE && overshoot < FADE_DISTANCE) {
+        overlayOpacity = 1 - Math.abs(overshoot) / FADE_DISTANCE
+      }
+      setBlackout(Math.min(1, Math.max(0, overlayOpacity)))
 
       const scrollY = window.scrollY
       if (scrollY > lastScrollYRef.current) {
@@ -100,12 +113,6 @@ function Hero() {
         <div className="hero-content">
           <p className="hero-label">HELLO, I'M</p>
 
-          <h1>
-            Muhammad
-            <br />
-            <span>Khaidir.</span>
-          </h1>
-
           <p className="hero-description">
             Informatics Management student &
             <br />
@@ -132,6 +139,8 @@ function Hero() {
           />
         </div>
       </div>
+
+      <div className="scene-blackout" style={{ opacity: blackout }}></div>
     </section>
   )
 }
