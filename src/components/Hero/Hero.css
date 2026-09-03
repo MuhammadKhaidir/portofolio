@@ -56,10 +56,9 @@
 }
 
 /* ============================================================
-   Hero visual — full-bleed nutupin seluruh .hero,
-   CharBg & Char otomatis ke-tengah karena child-nya udah pake
-   center alignment. TETEP TAMPIL di semua ukuran layar,
-   karena kontras teks (--ink) didesain buat di atas panel ini.
+   Hero visual — sekarang cuma isi CharBg (blur + sharp), full-bleed
+   nutupin seluruh .hero. Char udah dipindah keluar jadi sibling
+   sendiri, biar z-index-nya gak ke-cap di dalam stacking context ini.
    ============================================================ */
 .hero-visual {
   position: absolute;
@@ -106,6 +105,10 @@
   );
 }
 
+/* ============================================================
+   Char — sekarang sibling langsung .hero-content, dengan
+   z-index paling tinggi biar selalu di depan teks & bg.
+   ============================================================ */
 .hero-char {
   position: absolute;
   left: 50%;
@@ -115,43 +118,52 @@
   transform: translateX(-50%);
   transform-origin: bottom center;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 1;
-  pointer-events: auto; /* biar cuma char yang nangkep hover, bukan panel/bg-nya */
+  z-index: 2; /* di atas .hero-content (z-index: 1) */
+  pointer-events: auto; /* biar cuma char yang nangkep hover */
 }
 
 .hero-char:hover {
   transform: translateX(-50%) scale(1.045);
 }
 
+/* ============================================================
+   Hero content — ditengahin (horizontal & vertikal), digeser
+   naik dikit (40px di atas titik tengah section) biar gak
+   nabrak navbar (navbar 80px, jauh di atas titik tengah).
+   ============================================================ */
 .hero-content {
-  position: relative;
-  z-index: 1;
-  max-width: 620px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, calc(-50% - 24px));
+  z-index: 1; /* di atas bg, di bawah char */
+  width: min(1620px, 90%);
+  text-align: center;
   opacity: 0;
-  transform: translateY(16px);
   animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.1s forwards;
 }
 
 @keyframes hero-rise {
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translate(-50%, calc(-50% - 40px));
   }
 }
 
+/* dulu .hero-heading nge-render teks "KHAIDIR" langsung pakai font
+   (font-size/line-height/letter-spacing/font-weight di sini). Sekarang
+   isinya cuma "Hello, I'm" + gambar Kh.png, jadi rule-nya cuma ngatur
+   LAYOUT (numpuk ke bawah, ditengah, jaraknya) — bukan tipografi lagi. */
 .hero-heading {
   margin: 0;
-  color: var(--ink);
-  font-family: 'Space Grotesk', 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: clamp(2rem, 1.2rem + 3.2vw, 3.5rem);
-  line-height: 1.18;
-  letter-spacing: -0.01em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35em; /* jarak "Hello, I'm" ke gambar KHAIDIR */
 }
 
 .hero-heading-lead {
   display: block;
-  margin-bottom: 0.35em;
   color: var(--ink-muted);
   font-family: 'Inter', sans-serif;
   font-weight: 500;
@@ -159,9 +171,20 @@
   letter-spacing: 0;
 }
 
+/* === UKURAN & POSISI gambar KHAIDIR (Kh.png) diatur di sini === */
+.hero-heading-img {
+  display: block;
+  width: clamp(1020px, 42vw, 1000px); /* UKURAN: naik/turunin angka-angka ini */
+  height: auto;                     /* rasio gambar dijaga otomatis, jangan diisi */
+  max-width: 100%;
+  margin: 0 auto;                   /* POSISI: rata tengah horizontal */
+  margin-top: -20%;
+}
+
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center; /* biar tombol ikut ke tengah */
   gap: 14px;
   margin-top: 40px;
 }
@@ -256,7 +279,7 @@
   .hero-content {
     animation: none;
     opacity: 1;
-    transform: none;
+    transform: translate(-50%, calc(-50% - 40px)); /* tetep ketengah, bukan translate:none */
   }
   .hero-scroll-cue span {
     animation: none;
