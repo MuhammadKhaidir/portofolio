@@ -1,9 +1,17 @@
 import './Hero.css'
+import charBgImg from '../../assets/CharBg.png'
+import charImg from '../../assets/Char.png'
 
 function Hero() {
   return (
     <section id="home" className="hero">
       <div className="hero-texture" aria-hidden="true" />
+
+      <div className="hero-visual" aria-hidden="true">
+        <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--blur" />
+        <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--sharp" />
+        <img src={charImg} alt="" className="hero-char" />
+      </div>
 
       <div className="hero-content">
         <h1 className="hero-heading">

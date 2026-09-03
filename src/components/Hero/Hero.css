@@ -7,12 +7,12 @@
 
 .hero {
   --paper: #f6f7f9;
-  --ink: #191b20;
+  --ink: #f6f7fa;
   --ink-muted: #5b5f6b;
   --accent: #2f52e0;
   --accent-ink: #16234f;
   --line: #e3e4e8;
-  --btn-primary-text: #f6f7f9;
+  --btn-primary-text: #000000;
 
   box-sizing: border-box;
   position: relative;
@@ -53,6 +53,74 @@
   opacity: 0.08;
   transform: translateY(-50%);
   pointer-events: none;
+}
+
+/* ============================================================
+   Hero visual — full-bleed nutupin seluruh .hero,
+   CharBg & Char otomatis ke-tengah karena child-nya udah pake
+   center alignment. TETEP TAMPIL di semua ukuran layar,
+   karena kontras teks (--ink) didesain buat di atas panel ini.
+   ============================================================ */
+.hero-visual {
+  position: absolute;
+  inset: 0; /* full, edge-to-edge nutupin seluruh .hero */
+  overflow: hidden;
+  background: #000; /* item full, nutupin seluruh section */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.hero-visual-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* jaga rasio asli CharBg.png, sisanya kena bg hitam di atas */
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* layer bawah: full blur, jadi "sumber" blur di pinggir */
+.hero-visual-bg--blur {
+  filter: blur(30px);
+  transform: scale(1.15); /* biar tepi blur nggak keliatan gigit gambar aslinya */
+}
+
+/* layer atas: tajam di tengah, fade ke transparan di kiri-kanan,
+   jadi layer blur di bawahnya nongol cuma di sisi kiri & kanan */
+.hero-visual-bg--sharp {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 18%,
+    #000 82%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 18%,
+    #000 82%,
+    transparent 100%
+  );
+}
+
+.hero-char {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 94%;
+  width: auto;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 1;
+  pointer-events: auto; /* biar cuma char yang nangkep hover, bukan panel/bg-nya */
+}
+
+.hero-char:hover {
+  transform: translateX(-50%) scale(1.045);
 }
 
 .hero-content {
