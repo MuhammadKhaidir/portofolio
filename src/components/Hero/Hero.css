@@ -300,3 +300,59 @@
     display: none;
   }
 }
+
+/* ============================================================
+   Hero → About reveal transition (walking character wipe mask)
+   ============================================================ */
+.hero-reveal {
+  position: relative;
+  height: 320vh; /* 100vh stage + 120vh jarak scroll buat reveal — atur sesuka kamu */
+}
+
+.hero-reveal__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.hero-reveal__next {
+  position: absolute;
+  inset: 0;
+  background: #000000; /* GANTI ke warna bg asli .about, biar nyambung mulus */
+  z-index: 0;
+}
+
+.hero-reveal .hero {
+  position: relative;
+  z-index: 1;
+  will-change: clip-path;
+}
+
+.hero-reveal__walker {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 50%; /* sesuain proporsi gif kamu */
+  width: auto;
+  transform: translateX(-50%);
+  z-index: 2;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal {
+    height: auto;
+  }
+  .hero-reveal__stage {
+    position: relative;
+    height: auto;
+  }
+  .hero-reveal .hero {
+    clip-path: none !important;
+  }
+  .hero-reveal__walker {
+    display: none;
+  }
+}
