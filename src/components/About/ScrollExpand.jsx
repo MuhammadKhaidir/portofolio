@@ -10,7 +10,7 @@ const smoothstep = (edge0, edge1, x) => {
 }
 
 const ScrollExpand = ({
-  background = 'linear-gradient(135deg, #151515, #262626)', // warna/gradient panel frame
+  background = 'linear-gradient(135deg, #000000, #000000)', // warna/gradient panel frame
   title = '',
   scrollHint = '',
   startWidth = 42,
