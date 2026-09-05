@@ -326,16 +326,19 @@
 .hero-reveal .hero {
   position: relative;
   z-index: 1;
+  background: transparent; /* background dipindah ke .hero-mask biar ikut ke-clip */
 }
 
 .hero-mask {
   position: absolute;
   inset: 0;
+  background: var(--paper); /* konten + bg jalan bareng pas di-clip */
 }
 
 .hero-reveal .hero-mask {
   will-change: clip-path;
 }
+
 .hero-reveal__walker {
   position: absolute;
   left: 0;
