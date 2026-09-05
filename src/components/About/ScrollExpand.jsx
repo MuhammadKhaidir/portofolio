@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react'
+import { createContext, useCallback, useContext, useEffect, useRef } from 'react'
 
 import './ScrollExpand.css'
 
@@ -9,8 +9,50 @@ const smoothstep = (edge0, edge1, x) => {
   return t * t * (3 - 2 * t)
 }
 
+// progress mentah (0..1) dari ScrollExpand terdekat, dibagikan lewat context
+const ScrollExpandContext = createContext(null)
+
+export const useScrollExpandProgress = () => useContext(ScrollExpandContext)
+
+/**
+ * Fade murni opacity, nempel ke progress scroll yang sama kayak ScrollExpand
+ * di atasnya. Karena baca progress secara live (bukan flag "udah pernah
+ * muncul"), animasinya ke-replay terus tiap scroll maju-mundur.
+ */
+export const Reveal = ({
+  as: Tag = 'div',
+  from = 0.6,
+  to = 0.9,
+  children,
+  className = '',
+  style,
+  ...rest
+}) => {
+  const ref = useRef(null)
+  const subscribe = useScrollExpandProgress()
+
+  useEffect(() => {
+    if (!subscribe || !ref.current) return undefined
+    const el = ref.current
+    return subscribe(p => {
+      el.style.opacity = `${smoothstep(from, to, p)}`
+    })
+  }, [subscribe, from, to])
+
+  return (
+    <Tag
+      ref={ref}
+      className={className}
+      style={{ opacity: subscribe ? 0 : 1, willChange: 'opacity', ...style }}
+      {...rest}
+    >
+      {children}
+    </Tag>
+  )
+}
+
 const ScrollExpand = ({
-  background = 'linear-gradient(135deg, #000000, #000000)', // warna/gradient panel frame
+  background = 'linear-gradient(135deg, #000000, #000000)',
   title = '',
   scrollHint = '',
   startWidth = 42,
@@ -22,7 +64,7 @@ const ScrollExpand = ({
   smoothing = 0.1,
   overlayScrim = 0.45,
   useWindowScroll = false,
-  topOffset = 0, // px, offset dari atas viewport (buat navbar fixed) — cuma dipakai kalau useWindowScroll
+  topOffset = 0,
   enabled = true,
   children,
   className = '',
@@ -37,6 +79,12 @@ const ScrollExpand = ({
   const overlayRef = useRef(null)
   const scrimRef = useRef(null)
   const hintRef = useRef(null)
+
+  const subscribersRef = useRef(new Set())
+  const subscribe = useCallback(fn => {
+    subscribersRef.current.add(fn)
+    return () => subscribersRef.current.delete(fn)
+  }, [])
 
   const propsRef = useRef({})
   propsRef.current = {
@@ -81,11 +129,9 @@ const ScrollExpand = ({
       hintRef.current.style.transform = `translate3d(0, ${8 * gone}px, 0)`
     }
 
-    if (overlayRef.current) {
-      const inn = smoothstep(0.68, 1, p)
-      overlayRef.current.style.opacity = `${inn}`
-      overlayRef.current.style.transform = `translate3d(0, ${18 * (1 - inn)}px, 0)`
-    }
+    // overlay-nya sendiri udah gak di-fade di sini — tiap elemen di
+    // dalamnya (lewat <Reveal>) yang atur opacity-nya masing-masing.
+    subscribersRef.current.forEach(fn => fn(p))
   }, [])
 
   useEffect(() => {
@@ -182,36 +228,38 @@ const ScrollExpand = ({
   }, [applyProgress, useWindowScroll])
 
   return (
-    <div
-      ref={rootRef}
-      className={`scroll-expand ${useWindowScroll ? '' : 'scroll-expand--scroller'} ${className}`.trim()}
-      style={style}
-      {...rest}
-    >
-      <div ref={trackRef} className="scroll-expand__track">
-        <div ref={stageRef} className="scroll-expand__stage">
-          <div ref={frameRef} className="scroll-expand__frame">
-            <div className="scroll-expand__media" style={{ background }} />
-            <div ref={scrimRef} className="scroll-expand__scrim" />
-            {children ? (
-              <div ref={overlayRef} className="scroll-expand__overlay">
-                {children}
+    <ScrollExpandContext.Provider value={subscribe}>
+      <div
+        ref={rootRef}
+        className={`scroll-expand ${useWindowScroll ? '' : 'scroll-expand--scroller'} ${className}`.trim()}
+        style={style}
+        {...rest}
+      >
+        <div ref={trackRef} className="scroll-expand__track">
+          <div ref={stageRef} className="scroll-expand__stage">
+            <div ref={frameRef} className="scroll-expand__frame">
+              <div className="scroll-expand__media" style={{ background }} />
+              <div ref={scrimRef} className="scroll-expand__scrim" />
+              {children ? (
+                <div ref={overlayRef} className="scroll-expand__overlay">
+                  {children}
+                </div>
+              ) : null}
+            </div>
+            {title ? (
+              <div ref={titleRef} className="scroll-expand__title">
+                {title}
+              </div>
+            ) : null}
+            {scrollHint ? (
+              <div ref={hintRef} className="scroll-expand__hint">
+                {scrollHint}
               </div>
             ) : null}
           </div>
-          {title ? (
-            <div ref={titleRef} className="scroll-expand__title">
-              {title}
-            </div>
-          ) : null}
-          {scrollHint ? (
-            <div ref={hintRef} className="scroll-expand__hint">
-              {scrollHint}
-            </div>
-          ) : null}
         </div>
       </div>
-    </div>
+    </ScrollExpandContext.Provider>
   )
 }
 

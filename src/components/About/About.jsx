@@ -1,5 +1,5 @@
 import './About.css'
-import ScrollExpand from './ScrollExpand'
+import ScrollExpand, { Reveal } from './ScrollExpand'
 
 function About() {
   return (
@@ -17,22 +17,22 @@ function About() {
         topOffset={80}
       >
         <div className="about-content">
-          <h3>
+          <Reveal as="h3" from={0.58} to={0.78}>
             I build digital
             <br />
             experiences.
-          </h3>
+          </Reveal>
 
           <div className="about-text">
-            <p>
+            <Reveal as="p" from={0.68} to={0.88}>
               I'm a student of Informatics Management who enjoys building
               websites, applications, and interactive digital experiences.
-            </p>
+            </Reveal>
 
-            <p>
+            <Reveal as="p" from={0.78} to={0.98}>
               I'm currently focusing on web development, backend systems,
               and building projects to improve my technical skills.
-            </p>
+            </Reveal>
           </div>
         </div>
       </ScrollExpand>

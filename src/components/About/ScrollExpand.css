@@ -60,8 +60,7 @@
   justify-content: center;
   text-align: center;
   padding: 6%;
-  opacity: 0;
-  will-change: opacity, transform;
+  opacity: 1; /* ⬅️ pastiin ini ADA dan bukan 0 */
 }
 
 .scroll-expand__title {
