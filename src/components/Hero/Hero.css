@@ -326,9 +326,16 @@
 .hero-reveal .hero {
   position: relative;
   z-index: 1;
-  will-change: clip-path;
 }
 
+.hero-mask {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-reveal .hero-mask {
+  will-change: clip-path;
+}
 .hero-reveal__walker {
   position: absolute;
   left: 0;

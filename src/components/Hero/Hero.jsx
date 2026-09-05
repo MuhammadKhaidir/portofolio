@@ -91,30 +91,30 @@ function Hero() {
   return (
     <div className="hero-reveal" ref={trackRef}>
       <div className="hero-reveal__stage" ref={stageRef}>
-        {/* layer yang keliatan pas hero ke-mask. Ganti background-nya
-            di CSS (.hero-reveal__next) biar nyambung sama warna About */}
         <div className="hero-reveal__next" aria-hidden="true" />
 
-        <section id="home" className="hero" ref={heroRef}>
-          <div className="hero-texture" aria-hidden="true" />
+        <section id="home" className="hero">
+          <div className="hero-mask" ref={heroRef}>
+            <div className="hero-texture" aria-hidden="true" />
 
-          <div className="hero-visual" aria-hidden="true">
-            <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--blur" />
-            <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--sharp" />
-          </div>
+            <div className="hero-visual" aria-hidden="true">
+              <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--blur" />
+              <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--sharp" />
+            </div>
 
-          <div className="hero-content">
-            <h1 className="hero-heading">
-              <span className="hero-heading-lead">Hello, I'm</span>
-              <img src={khImg} alt="Khaidir" className="hero-heading-img" />
-            </h1>
+            <div className="hero-content">
+              <h1 className="hero-heading">
+                <span className="hero-heading-lead">Hello, I'm</span>
+                <img src={khImg} alt="Khaidir" className="hero-heading-img" />
+              </h1>
+            </div>
+
+            <div className="hero-scroll-cue" aria-hidden="true">
+              <span />
+            </div>
           </div>
 
           <img src={charImg} alt="" className="hero-char" aria-hidden="true" />
-
-          <div className="hero-scroll-cue" aria-hidden="true">
-            <span />
-          </div>
         </section>
 
         <img
