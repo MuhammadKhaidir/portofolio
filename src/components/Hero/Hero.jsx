@@ -8,17 +8,37 @@ import idleGif from '../../assets/IdleChar.gif'
 
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v)
+const smoothstep = (edge0, edge1, x) => {
+  const t = clamp((x - edge0) / (edge1 - edge0 || 1e-6), 0, 1)
+  return t * t * (3 - 2 * t)
+}
+
 const MASK_FEATHER_MAX = 80 // px — feather maksimum di layar lebar
 const MASK_FEATHER_RATIO = 0.12 // di layar sempit, feather = 12% lebar viewport (biar gak kebesaran)
-const WIPE_RATIO = 0.61 // porsi scroll buat wipe vs hold-text — ngikutin rasio vh wipe:hold di CSS
+
+// WIPE_RATIO = porsi raw scroll (0..1) buat wipe vs zona teks.
+// Zona teks sekarang dibagi rata ke TEXT_PHASES fase (bukan cuma 1 teks nempel).
+// Angka ini ngikutin rasio 220vh wipe : (3 x 140vh teks) = 220 : 420 di CSS.
+const WIPE_RATIO = 0.34375
+const TEXT_PHASES = 3
+
+// 3 pasang teks yang bergantian muncul di zona teks.
+// Fase 1 & 2: fade-in -> hold -> fade-out (gantian normal).
+// Fase TERAKHIR: fade-in -> hold doang, GAK di-fade-out — biar dia ikut
+// "tenggelam" kebawa scroll bareng stage (bukan ngilang duluan via opacity).
+const PHRASES = [
+  { left: ['Check', 'Here!'], right: ['Hmm,', "Isn't this cool?"] },
+  { left: ["Rome wasn't", 'built in a day.'], right: ['Neither was', 'this portfolio.'] },
+  { left: ['Actions speak', 'louder than words.'], right: ["So let's", 'keep scrolling.'] }
+]
 
 function Hero() {
   const trackRef = useRef(null)
   const stageRef = useRef(null)
   const heroRef = useRef(null)
   const walkerRef = useRef(null)
-  const labelLeftRef = useRef(null)
-  const labelRightRef = useRef(null)
+  const labelLeftRefs = useRef([])
+  const labelRightRefs = useRef([])
   const idleTimerRef = useRef(null)
   const rafRef = useRef(0)
   const progressRef = useRef({ current: 0, target: 0 })
@@ -48,14 +68,31 @@ function Hero() {
       walkerRef.current.style.opacity = `${clamp(fade, 0, 1)}`
     }
 
-    if (labelLeftRef.current) {
-      labelLeftRef.current.style.opacity = `${pText}`
-      labelLeftRef.current.style.transform = `translate3d(0, ${16 * (1 - pText)}px, 0)`
-    }
+    for (let i = 0; i < TEXT_PHASES; i++) {
+      const segStart = i / TEXT_PHASES
+      const segEnd = (i + 1) / TEXT_PHASES
+      const li = clamp((pText - segStart) / (segEnd - segStart), 0, 1)
+      const isLast = i === TEXT_PHASES - 1
 
-    if (labelRightRef.current) {
-      labelRightRef.current.style.opacity = `${pText}`
-      labelRightRef.current.style.transform = `translate3d(0, ${16 * (1 - pText)}px, 0)`
+      const fadeIn = smoothstep(0, 0.25, li)
+      // fase terakhir: fadeOut dimatiin (selalu 0) -> opacity gak pernah
+      // dipaksa balik ke 0, jadi teksnya "ikut tenggelam" bareng scroll
+      // pas sticky-nya lepas, bukan fade ke transparan duluan.
+      const fadeOut = isLast ? 0 : smoothstep(0.75, 1, li)
+      const opacity = clamp(fadeIn - fadeOut, 0, 1)
+      const lift = 16 * (1 - opacity)
+
+      const leftEl = labelLeftRefs.current[i]
+      if (leftEl) {
+        leftEl.style.opacity = `${opacity}`
+        leftEl.style.transform = `translate3d(0, ${lift}px, 0)`
+      }
+
+      const rightEl = labelRightRefs.current[i]
+      if (rightEl) {
+        rightEl.style.opacity = `${opacity}`
+        rightEl.style.transform = `translate3d(0, ${lift}px, 0)`
+      }
     }
   }, [])
 
@@ -123,16 +160,28 @@ function Hero() {
       <div className="hero-reveal__stage" ref={stageRef}>
         <div className="hero-reveal__next" aria-hidden="true" />
 
-        <div className="hero-reveal__label hero-reveal__label--left" ref={labelLeftRef} aria-hidden="true">
-          Check
-          <br />
-          Here!
-        </div>
-        <div className="hero-reveal__label hero-reveal__label--right" ref={labelRightRef} aria-hidden="true">
-          Hmm,
-          <br />
-          Isn't this cool?
-        </div>
+        {PHRASES.flatMap((phrase, i) => ([
+          <div
+            key={`left-${i}`}
+            className="hero-reveal__label hero-reveal__label--left"
+            ref={el => (labelLeftRefs.current[i] = el)}
+            aria-hidden="true"
+          >
+            {phrase.left[0]}
+            <br />
+            {phrase.left[1]}
+          </div>,
+          <div
+            key={`right-${i}`}
+            className="hero-reveal__label hero-reveal__label--right"
+            ref={el => (labelRightRefs.current[i] = el)}
+            aria-hidden="true"
+          >
+            {phrase.right[0]}
+            <br />
+            {phrase.right[1]}
+          </div>
+        ]))}
 
         <section id="home" className="hero">
           <div className="hero-mask" ref={heroRef}>

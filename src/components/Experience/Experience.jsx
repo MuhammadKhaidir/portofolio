@@ -8,6 +8,8 @@ function Experience() {
         <h2>Experience</h2>
       </div>
 
+      
+
     <div className="experience-item">
       <div className="experience-date">
         2025 - Present
@@ -74,7 +76,7 @@ function Experience() {
           </p>
 
           <p className="experience-description">
-            As a member of public relation
+            As a member of public relation(out)
           </p>
         </div>
       </div>
@@ -95,10 +97,34 @@ function Experience() {
           assisted with technical tasks, and gained practical experience in
           applying software development skills within a professional environment.
         </p>
+
+        
       </div>
+      
+          <div className="experience-item">
+      <div className="experience-date">
+        2022-2023
       </div>
+
+      <div>
+        <h3>Organization</h3>
+        <p className="experience-company">
+          Core Editor SMKN1 Palembang
+        </p>
+
+        <p className="experience-description">
+          Edit a lot of videos by using Adobe premiere pro.
+        </p>
+      </div>
+    </div>
+
+      
+      </div>
+
+      
     </section>
   )
 }
+
 
 export default Experience

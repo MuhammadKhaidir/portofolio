@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10%;
+  margin-top: 10%;
 }
 
 .about-content h3 {
@@ -36,4 +37,5 @@
   width: 100%;
   max-width: 1100px;
   text-align: left;
+  
 }

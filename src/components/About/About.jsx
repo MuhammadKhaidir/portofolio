@@ -15,6 +15,11 @@ function About() {
         scrollHint="Scroll"
         useWindowScroll
         topOffset={80}
+        holdDistance={1.4}
+        walkPhrases={[
+          'Still building,\nstill exploring.',
+          "Let's keep\nscrolling."
+        ]}
       >
         <div className="about-content">
           <Reveal as="h3" from={0.58} to={0.78}>
@@ -30,7 +35,7 @@ function About() {
             </Reveal>
 
             <Reveal as="p" from={0.78} to={0.98}>
-              I'm currently focusing on web development, backend systems,
+              I'm currently focusing on game development, web development, backend systems,
               and building projects to improve my technical skills.
             </Reveal>
           </div>

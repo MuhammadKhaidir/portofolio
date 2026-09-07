@@ -276,18 +276,19 @@
     display: none;
   }
   .hero-heading-img {
-    width: clamp(220px, 60vw, 480px); /* proporsi lebih kecil khusus HP */
+    width: clamp(260px, 74vw, 560px); /* diperbesar khusus HP */
     margin-top: -10%;
   }
 }
 
 /* ============================================================
    Hero → About reveal transition (walking character wipe mask
-   + side text reveal before continuing scroll)
+   + 3 pasang teks bergantian via opacity, sebelum lanjut scroll
+   normal ke section berikutnya)
    ============================================================ */
 .hero-reveal {
   position: relative;
-  height: 460vh; /* 100vh stage + ~360vh scroll (220 wipe + 140 hold-text) */
+  height: 740vh; /* 100vh stage + 220vh wipe + 3x140vh (3 fase teks bergantian) */
 }
 
 .hero-reveal__stage {
@@ -375,17 +376,16 @@
     display: none;
   }
   .hero-reveal__label {
-    opacity: 1 !important;
-    transform: none !important;
+    display: none;
   }
 }
 
 @media (max-width: 800px) {
   .hero-reveal {
-    height: 380vh; /* jarak scroll dipendekin dikit khusus HP */
+    height: 620vh; /* jarak scroll dipendekin proporsional khusus HP */
   }
   .hero-reveal__label {
-    font-size: clamp(0.7rem, 3.4vw, 0.95rem);
+    font-size: clamp(0.85rem, 4.4vw, 1.15rem); /* diperbesar dikit khusus HP */
     left: 5%;
     right: 5%;
   }
