@@ -6,27 +6,56 @@ import khImg from '../../assets/Kh.png'
 import walkGif from '../../assets/RightWalkChar.gif'
 import idleGif from '../../assets/IdleChar.gif'
 
+
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v)
+const MASK_FEATHER_MAX = 80 // px — feather maksimum di layar lebar
+const MASK_FEATHER_RATIO = 0.12 // di layar sempit, feather = 12% lebar viewport (biar gak kebesaran)
+const WIPE_RATIO = 0.61 // porsi scroll buat wipe vs hold-text — ngikutin rasio vh wipe:hold di CSS
 
 function Hero() {
   const trackRef = useRef(null)
   const stageRef = useRef(null)
   const heroRef = useRef(null)
   const walkerRef = useRef(null)
+  const labelLeftRef = useRef(null)
+  const labelRightRef = useRef(null)
   const idleTimerRef = useRef(null)
   const rafRef = useRef(0)
   const progressRef = useRef({ current: 0, target: 0 })
+  const featherRef = useRef(MASK_FEATHER_MAX)
 
   const [isMoving, setIsMoving] = useState(false)
 
-  const paint = useCallback((p) => {
+  const paint = useCallback((raw) => {
+    const pWipe = clamp(raw / WIPE_RATIO, 0, 1)
+    const pText = clamp((raw - WIPE_RATIO) / (1 - WIPE_RATIO), 0, 1)
+    const feather = featherRef.current
+
     if (heroRef.current) {
-      heroRef.current.style.clipPath = `inset(0 0 0 ${p * 100}%)`
+      const center = pWipe * 100
+      const mask = `linear-gradient(to right,
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0) calc(${center}% - ${feather}px),
+        rgba(0,0,0,1) calc(${center}% + ${feather}px),
+        rgba(0,0,0,1) 100%)`
+      heroRef.current.style.maskImage = mask
+      heroRef.current.style.webkitMaskImage = mask
     }
+
     if (walkerRef.current) {
-      const fade = p < 0.05 ? p / 0.05 : p > 0.95 ? (1 - p) / 0.05 : 1
-      walkerRef.current.style.left = `${p * 100}%`
+      const fade = pWipe < 0.05 ? pWipe / 0.05 : pWipe > 0.95 ? (1 - pWipe) / 0.05 : 1
+      walkerRef.current.style.left = `${pWipe * 100}%`
       walkerRef.current.style.opacity = `${clamp(fade, 0, 1)}`
+    }
+
+    if (labelLeftRef.current) {
+      labelLeftRef.current.style.opacity = `${pText}`
+      labelLeftRef.current.style.transform = `translate3d(0, ${16 * (1 - pText)}px, 0)`
+    }
+
+    if (labelRightRef.current) {
+      labelRightRef.current.style.opacity = `${pText}`
+      labelRightRef.current.style.transform = `translate3d(0, ${16 * (1 - pText)}px, 0)`
     }
   }, [])
 
@@ -41,6 +70,7 @@ function Hero() {
       const stageH = stage.clientHeight
       const trackH = track.clientHeight
       span = Math.max(1, trackH - stageH)
+      featherRef.current = Math.min(MASK_FEATHER_MAX, window.innerWidth * MASK_FEATHER_RATIO)
     }
 
     const readProgress = () => {
@@ -92,6 +122,17 @@ function Hero() {
     <div className="hero-reveal" ref={trackRef}>
       <div className="hero-reveal__stage" ref={stageRef}>
         <div className="hero-reveal__next" aria-hidden="true" />
+
+        <div className="hero-reveal__label hero-reveal__label--left" ref={labelLeftRef} aria-hidden="true">
+          Check
+          <br />
+          Here!
+        </div>
+        <div className="hero-reveal__label hero-reveal__label--right" ref={labelRightRef} aria-hidden="true">
+          Hmm,
+          <br />
+          Isn't this cool?
+        </div>
 
         <section id="home" className="hero">
           <div className="hero-mask" ref={heroRef}>

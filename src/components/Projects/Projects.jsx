@@ -1,4 +1,5 @@
 import './Projects.css'
+import pixelGameGif from '../../assets/2DGame.gif'
 
 function Projects() {
   const projects = [
@@ -7,11 +8,12 @@ function Projects() {
       title: '2D Pixel Game',
       description: 'A 2D medieval adventure game built with Java.',
       tags: ['Java', 'Game', 'Pixel Art'],
+      image: pixelGameGif,
     },
     {
       number: '02',
-      title: 'StudyVerse',
-      description: 'AI-powered learning platform for students.',
+      title: 'Showcase Website',
+      description: 'A website to support my 2D game',
       tags: ['React', 'Node.js', 'AI'],
     },
     {
@@ -33,7 +35,11 @@ function Projects() {
         {projects.map((project) => (
           <article className="project-card" key={project.number}>
             <div className="project-image">
-              <span>PROJECT {project.number}</span>
+              {project.image ? (
+                <img src={project.image} alt={project.title} />
+              ) : (
+                <span>PROJECT {project.number}</span>
+              )}
             </div>
 
             <div className="project-content">

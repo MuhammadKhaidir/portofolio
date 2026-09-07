@@ -19,13 +19,12 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: 80px 7% 60px; /* 80px = tinggi navbar, samain kalau navbar berubah */
+  padding: 80px 7% 60px;
   background: var(--paper);
   overflow: hidden;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* tekstur dot-grid tipis, cuma keliatan samar di sisi kanan */
 .hero-texture {
   position: absolute;
   inset: 0;
@@ -40,7 +39,6 @@
   mask-image: radial-gradient(ellipse 60% 80% at 80% 40%, #000 0%, transparent 70%);
 }
 
-/* satu aksen geometris (cincin garis), pengganti si karakter/corridor */
 .hero::after {
   content: '';
   position: absolute;
@@ -55,16 +53,11 @@
   pointer-events: none;
 }
 
-/* ============================================================
-   Hero visual — sekarang cuma isi CharBg (blur + sharp), full-bleed
-   nutupin seluruh .hero. Char udah dipindah keluar jadi sibling
-   sendiri, biar z-index-nya gak ke-cap di dalam stacking context ini.
-   ============================================================ */
 .hero-visual {
   position: absolute;
-  inset: 0; /* full, edge-to-edge nutupin seluruh .hero */
+  inset: 0;
   overflow: hidden;
-  background: #000; /* item full, nutupin seluruh section */
+  background: #000;
   z-index: 0;
   pointer-events: none;
 }
@@ -74,20 +67,17 @@
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain; /* jaga rasio asli CharBg.png, sisanya kena bg hitam di atas */
+  object-fit: contain;
   object-position: center;
   z-index: 0;
   pointer-events: none;
 }
 
-/* layer bawah: full blur, jadi "sumber" blur di pinggir */
 .hero-visual-bg--blur {
   filter: blur(30px);
-  transform: scale(1.15); /* biar tepi blur nggak keliatan gigit gambar aslinya */
+  transform: scale(1.15);
 }
 
-/* layer atas: tajam di tengah, fade ke transparan di kiri-kanan,
-   jadi layer blur di bawahnya nongol cuma di sisi kiri & kanan */
 .hero-visual-bg--sharp {
   -webkit-mask-image: linear-gradient(
     to right,
@@ -105,10 +95,6 @@
   );
 }
 
-/* ============================================================
-   Char — sekarang sibling langsung .hero-content, dengan
-   z-index paling tinggi biar selalu di depan teks & bg.
-   ============================================================ */
 .hero-char {
   position: absolute;
   left: 50%;
@@ -118,25 +104,20 @@
   transform: translateX(-50%);
   transform-origin: bottom center;
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  z-index: 2; /* di atas .hero-content (z-index: 1) */
-  pointer-events: auto; /* biar cuma char yang nangkep hover */
+  z-index: 2;
+  pointer-events: auto;
 }
 
 .hero-char:hover {
   transform: translateX(-50%) scale(1.045);
 }
 
-/* ============================================================
-   Hero content — ditengahin (horizontal & vertikal), digeser
-   naik dikit (40px di atas titik tengah section) biar gak
-   nabrak navbar (navbar 80px, jauh di atas titik tengah).
-   ============================================================ */
 .hero-content {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, calc(-50% - 24px));
-  z-index: 1; /* di atas bg, di bawah char */
+  z-index: 1;
   width: min(1620px, 90%);
   text-align: center;
   opacity: 0;
@@ -150,16 +131,12 @@
   }
 }
 
-/* dulu .hero-heading nge-render teks "KHAIDIR" langsung pakai font
-   (font-size/line-height/letter-spacing/font-weight di sini). Sekarang
-   isinya cuma "Hello, I'm" + gambar Kh.png, jadi rule-nya cuma ngatur
-   LAYOUT (numpuk ke bawah, ditengah, jaraknya) — bukan tipografi lagi. */
 .hero-heading {
   margin: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.35em; /* jarak "Hello, I'm" ke gambar KHAIDIR */
+  gap: 0.35em;
 }
 
 .hero-heading-lead {
@@ -171,20 +148,19 @@
   letter-spacing: 0;
 }
 
-/* === UKURAN & POSISI gambar KHAIDIR (Kh.png) diatur di sini === */
 .hero-heading-img {
   display: block;
-  width: clamp(1020px, 42vw, 1000px); /* UKURAN: naik/turunin angka-angka ini */
-  height: auto;                     /* rasio gambar dijaga otomatis, jangan diisi */
+  width: clamp(260px, 42vw, 1020px); /* FIX: min dulu naik urutannya sekarang bener (min < max) */
+  height: auto;
   max-width: 100%;
-  margin: 0 auto;                   /* POSISI: rata tengah horizontal */
+  margin: 0 auto;
   margin-top: -20%;
 }
 
 .hero-buttons {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; /* biar tombol ikut ke tengah */
+  justify-content: center;
   gap: 14px;
   margin-top: 40px;
 }
@@ -279,7 +255,7 @@
   .hero-content {
     animation: none;
     opacity: 1;
-    transform: translate(-50%, calc(-50% - 40px)); /* tetep ketengah, bukan translate:none */
+    transform: translate(-50%, calc(-50% - 40px));
   }
   .hero-scroll-cue span {
     animation: none;
@@ -292,63 +268,95 @@
     align-items: flex-start;
   }
   .hero::after {
-    width: 380px;
-    height: 380px;
-    right: -20%;
+    width: 260px;
+    height: 260px;
+    right: -25%;
   }
   .hero-scroll-cue {
     display: none;
   }
+  .hero-heading-img {
+    width: clamp(220px, 60vw, 480px); /* proporsi lebih kecil khusus HP */
+    margin-top: -10%;
+  }
 }
 
 /* ============================================================
-   Hero → About reveal transition (walking character wipe mask)
+   Hero → About reveal transition (walking character wipe mask
+   + side text reveal before continuing scroll)
    ============================================================ */
 .hero-reveal {
   position: relative;
-  height: 320vh; /* 100vh stage + 120vh jarak scroll buat reveal — atur sesuka kamu */
+  height: 460vh; /* 100vh stage + ~360vh scroll (220 wipe + 140 hold-text) */
 }
 
 .hero-reveal__stage {
   position: sticky;
   top: 0;
   height: 100vh;
+  height: 100svh; /* fallback lebih akurat di mobile (address bar gak ikut ke-hitung) */
   overflow: hidden;
 }
 
 .hero-reveal__next {
   position: absolute;
   inset: 0;
-  background: #000000; /* GANTI ke warna bg asli .about, biar nyambung mulus */
+  background: #000000;
   z-index: 0;
 }
 
 .hero-reveal .hero {
   position: relative;
   z-index: 1;
-  background: transparent; /* background dipindah ke .hero-mask biar ikut ke-clip */
+  background: transparent;
 }
 
 .hero-mask {
   position: absolute;
   inset: 0;
-  background: var(--paper); /* konten + bg jalan bareng pas di-clip */
+  background: var(--paper);
 }
 
 .hero-reveal .hero-mask {
-  will-change: clip-path;
+  will-change: mask-image;
 }
 
 .hero-reveal__walker {
   position: absolute;
   left: 0;
   bottom: 0;
-  height: 50%; /* sesuain proporsi gif kamu */
+  height: 50%;
   width: auto;
   transform: translateX(-50%);
   z-index: 2;
   opacity: 0;
   pointer-events: none;
+}
+
+.hero-reveal__label {
+  position: absolute;
+  top: 50%;
+  transform: translate3d(0, 16px, 0);
+  opacity: 0;
+  z-index: 3;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600; /* FIX: dari 6000 (invalid) jadi 600 */
+  font-size: clamp(5rem, 2.4vw, 1.4rem); /* FIX: urutan min < max dibenerin */
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  pointer-events: none;
+  will-change: opacity, transform;
+}
+
+.hero-reveal__label--left {
+  left: 7%;
+  text-align: left;
+}
+
+.hero-reveal__label--right {
+  right: 7%;
+  text-align: right;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -359,10 +367,26 @@
     position: relative;
     height: auto;
   }
-  .hero-reveal .hero {
-    clip-path: none !important;
+  .hero-reveal .hero-mask {
+    mask-image: none !important;
+    -webkit-mask-image: none !important;
   }
   .hero-reveal__walker {
     display: none;
+  }
+  .hero-reveal__label {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (max-width: 800px) {
+  .hero-reveal {
+    height: 380vh; /* jarak scroll dipendekin dikit khusus HP */
+  }
+  .hero-reveal__label {
+    font-size: clamp(0.7rem, 3.4vw, 0.95rem);
+    left: 5%;
+    right: 5%;
   }
 }
