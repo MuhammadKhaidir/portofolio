@@ -5,6 +5,9 @@ import charImg from '../../assets/Char.png'
 import khImg from '../../assets/Kh.png'
 import walkGif from '../../assets/RightWalkChar.gif'
 import idleGif from '../../assets/IdleChar.gif'
+import leftHeroImg from '../../assets/LeftHero.png'
+import rightHeroImg from '../../assets/RightHero.png'
+import rockImg from '../../assets/Rock.png'
 
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v)
@@ -183,29 +186,33 @@ function Hero() {
           </div>
         ]))}
 
-        <section id="home" className="hero">
-          <div className="hero-mask" ref={heroRef}>
-            <div className="hero-texture" aria-hidden="true" />
+          <section id="home" className="hero">
+            <div className="hero-mask" ref={heroRef}>
+              <div className="hero-texture" aria-hidden="true" />
 
-            <div className="hero-visual" aria-hidden="true">
-              <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--blur" />
-              <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--sharp" />
+              <div className="hero-visual" aria-hidden="true">
+                <img src={leftHeroImg} alt="" className="hero-bg-side hero-bg-side--left" />
+                <img src={rightHeroImg} alt="" className="hero-bg-side hero-bg-side--right" />
+
+                <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--blur" />
+                <img src={charBgImg} alt="" className="hero-visual-bg hero-visual-bg--sharp" />
+              </div>
+
+              <div className="hero-content">
+                <h1 className="hero-heading">
+                  <span className="hero-heading-lead">Hello, I'm</span>
+                  <img src={khImg} alt="Khaidir" className="hero-heading-img" />
+                </h1>
+              </div>
+
+              <div className="hero-scroll-cue" aria-hidden="true">
+                <span />
+              </div>
             </div>
 
-            <div className="hero-content">
-              <h1 className="hero-heading">
-                <span className="hero-heading-lead">Hello, I'm</span>
-                <img src={khImg} alt="Khaidir" className="hero-heading-img" />
-              </h1>
-            </div>
-
-            <div className="hero-scroll-cue" aria-hidden="true">
-              <span />
-            </div>
-          </div>
-
-          <img src={charImg} alt="" className="hero-char" aria-hidden="true" />
-        </section>
+            <img src={rockImg} alt="" className="hero-rock" aria-hidden="true" />
+            <img src={charImg} alt="" className="hero-char" aria-hidden="true" />
+          </section>
 
         <img
           ref={walkerRef}

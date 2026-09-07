@@ -62,6 +62,39 @@
   pointer-events: none;
 }
 
+.hero-bg-side {
+  position: absolute;
+  bottom: 10%;
+  height: 90%;
+  width: 80%;
+  object-fit: contain;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+.hero-bg-side--left {
+  left: 0;
+  object-position: left bottom;
+}
+
+.hero-bg-side--right {
+  right: 0;
+  object-position: right bottom;
+}
+
+.hero-rock {
+  position: absolute;
+  left: 50%;
+  bottom: -6%;
+  height: 50%;
+  width: auto;
+  transform: translateX(-50%);
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
 .hero-visual-bg {
   position: absolute;
   inset: 0;
@@ -155,6 +188,41 @@
   max-width: 100%;
   margin: 0 auto;
   margin-top: -20%;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    padding: 100px 6% 50px;
+    align-items: flex-start;
+  }
+  .hero::after {
+    width: 260px;
+    height: 260px;
+    right: -25%;
+  }
+  .hero-scroll-cue {
+    display: none;
+  }
+  .hero-heading-img {
+    width: clamp(260px, 74vw, 560px);
+    margin-top: -10%;
+  }
+
+  /* biar char gak dominan lebar layar & rock + bg samping keliatan */
+  .hero-bg-side {
+    width: 46%;
+    height: 50%;
+    bottom: 8%;
+  }
+
+  .hero-rock {
+    height: 34%;
+    bottom: -4%;
+  }
+
+  .hero-char {
+    height: 90%;
+  }
 }
 
 .hero-buttons {
