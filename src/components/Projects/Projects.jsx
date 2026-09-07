@@ -1,5 +1,7 @@
 import './Projects.css'
 import pixelGameGif from '../../assets/2DGame.gif'
+import Showcase from '../../assets/2DShowcase.png'
+import GameWeb from '../../assets/2DGameWeb.png'
 
 function Projects() {
   const projects = [
@@ -15,12 +17,14 @@ function Projects() {
       title: 'Showcase Website',
       description: 'A website to support my 2D game',
       tags: ['React', 'Node.js', 'AI'],
+      image: GameWeb,
     },
     {
       number: '03',
       title: 'Portfolio Website',
       description: 'Personal portfolio showcasing my work and skills.',
       tags: ['React', 'Vite', 'CSS'],
+      image: Showcase,
     },
   ]
 
