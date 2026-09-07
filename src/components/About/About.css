@@ -1,3 +1,10 @@
+.about {
+  background: linear-gradient(135deg, #000000, #000000);
+  border-radius: 24px;
+  padding: 80px 7%;
+  color: #fff;
+}
+
 .about-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -28,14 +35,4 @@
     grid-template-columns: 1fr;
     gap: 40px;
   }
-}
-
-/* .scroll-expand__overlay itu flex + text-align:center, jadi ini nge-fix
-   biar .about-content dapet lebar yang jelas (grid gak collapse) dan
-   teksnya balik left-align kayak desain aslinya */
-.about-scroll-expand .about-content {
-  width: 100%;
-  max-width: 1100px;
-  text-align: left;
-  
 }
