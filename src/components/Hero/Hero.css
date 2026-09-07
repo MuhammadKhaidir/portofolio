@@ -172,6 +172,7 @@
   gap: 0.35em;
 }
 
+
 .hero-heading-lead {
   display: block;
   color: var(--ink-muted);
@@ -207,6 +208,17 @@
     width: clamp(260px, 74vw, 560px);
     margin-top: -10%;
   }
+
+  .hero-visual-bg {
+  position: absolute;
+  inset: 0;
+  width: 90%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+}
 
   /* biar char gak dominan lebar layar & rock + bg samping keliatan */
   .hero-bg-side {
