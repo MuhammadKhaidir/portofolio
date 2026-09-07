@@ -8,7 +8,10 @@ function Footer() {
       <div>
         <a href="https://github.com/MuhammadKhaidir">GitHub</a>
         <a href="#">LinkedIn</a>
-        <a href="#">Instagram</a>
+        <a href="https://www.instagram.com/m.khaiidir/">Instagram</a>
+        <a href="https://wa.me/62895634304200" target="_blank" rel="noopener noreferrer">
+  WhatsApp
+</a>
       </div>
     </footer>
   )

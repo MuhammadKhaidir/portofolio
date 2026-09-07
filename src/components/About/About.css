@@ -1,22 +1,48 @@
 .about {
-  background: linear-gradient(135deg, #000000, #000000);
+  background: #ece7dc;
   border-radius: 24px;
   padding: 80px 7%;
-  color: #fff;
+  color: #2b2721;
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+}
+
+.section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(43, 39, 33, 0.14);
+}
+
+.section-title span {
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  color: rgba(43, 39, 33, 0.36);
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: rgba(43, 39, 33, 0.58);
 }
 
 .about-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10%;
-  margin-top: 10%;
 }
 
 .about-content h3 {
   margin: 0;
-  font-size: clamp(45px, 5vw, 75px);
-  line-height: 0.95;
-  letter-spacing: -4px;
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 56px);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
 }
 
 .about-text {
@@ -24,9 +50,10 @@
 }
 
 .about-text p {
-  color: #999;
-  font-size: 17px;
+  color: rgba(43, 39, 33, 0.58);
+  font-size: 18px;
   line-height: 1.8;
+  font-weight: 300;
   margin-bottom: 30px;
 }
 
