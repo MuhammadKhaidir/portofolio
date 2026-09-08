@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './Skills.css'
 
 const skills = [
@@ -24,12 +24,86 @@ const skills = [
   },
 ]
 
+// How long the cover takes to fade out before the icons fade in (and vice
+// versa). Keep this in sync with the opacity transition duration in
+// Skills.css (.skill-cover / .skill-icons).
+const FADE_MS = 350
+
+// Devicon (devicon.dev) hosts a colored logo for pretty much every language,
+// framework and tool, served straight off jsDelivr — so a tag just needs to
+// resolve to devicon's slug for its icon to show up, no need to go find and
+// save each logo by hand. Pinned to a specific release so the CDN can cache
+// it properly; bump the version below whenever you want newer icons.
+const DEVICON_VERSION = 'v2.17.0'
+const DEVICON_BASE = `https://cdn.jsdelivr.net/gh/devicons/devicon@${DEVICON_VERSION}/icons`
+
+// Devicon's slugs are almost always just the tag name lowercased with
+// punctuation stripped ("Next.js" -> "nextjs", "VS Code" -> "vscode"), so
+// that's the default. Only a few names diverge from that pattern — add more
+// entries here if a future tag's icon doesn't load.
+const ICON_OVERRIDES = {
+  html: 'html5',
+  css: 'css3',
+}
+
+const slugify = (tag) => tag.toLowerCase().replace(/[^a-z0-9]/g, '')
+
+const iconUrl = (tag) => {
+  const key = slugify(tag)
+  const slug = ICON_OVERRIDES[key] || key
+  return `${DEVICON_BASE}/${slug}/${slug}-original.svg`
+}
+
+// Renders a tag's icon, falling back to its initials if devicon doesn't have
+// a matching logo (there's no generic "SQL" logo, for instance) so a missing
+// icon never shows up as a broken image.
+function SkillIcon({ tag }) {
+  const [broken, setBroken] = useState(false)
+
+  return (
+    <div className="skill-icon">
+      {broken ? (
+        <span className="skill-icon-fallback" aria-hidden="true">
+          {tag.slice(0, 2).toUpperCase()}
+        </span>
+      ) : (
+        <img
+          className="skill-icon-img"
+          src={iconUrl(tag)}
+          alt=""
+          loading="lazy"
+          onError={() => setBroken(true)}
+        />
+      )}
+      <span className="skill-icon-label">{tag}</span>
+    </div>
+  )
+}
+
 function Skills() {
-  const [openBook, setOpenBook] = useState(null)
-  const cardsRef = useRef({})
+  const [openBook, setOpenBook] = useState(null) // which book is expanded
+  const [showIcons, setShowIcons] = useState(null) // which book's icons are visible
+  const timers = useRef({})
+
+  useEffect(() => {
+    const activeTimers = timers.current
+    return () => {
+      Object.values(activeTimers).forEach(clearTimeout)
+    }
+  }, [])
 
   const toggleBook = (number) => {
-    setOpenBook((prev) => (prev === number ? null : number))
+    clearTimeout(timers.current[number])
+
+    if (openBook === number) {
+      // Closing: icons fade out first, then the cover fades back in.
+      setShowIcons(null)
+      timers.current[number] = setTimeout(() => setOpenBook(null), FADE_MS)
+    } else {
+      // Opening: cover fades out first, then the icons fade in.
+      setOpenBook(number)
+      timers.current[number] = setTimeout(() => setShowIcons(number), FADE_MS)
+    }
   }
 
   const handleKeyDown = (e, number) => {
@@ -68,11 +142,13 @@ function Skills() {
         <div className="skills-grid">
           {skills.map((skill) => {
             const isOpen = openBook === skill.number
+            const isShowingIcons = showIcons === skill.number
             return (
               <div
                 key={skill.number}
-                ref={(el) => (cardsRef.current[skill.number] = el)}
-                className={`skill-book${isOpen ? ' is-open' : ''}`}
+                className={`skill-book${isOpen ? ' is-open' : ''}${
+                  isShowingIcons ? ' show-icons' : ''
+                }`}
                 onClick={() => toggleBook(skill.number)}
                 onKeyDown={(e) => handleKeyDown(e, skill.number)}
                 onPointerMove={handlePointerMove}
@@ -80,7 +156,7 @@ function Skills() {
                 role="button"
                 tabIndex={0}
                 aria-pressed={isOpen}
-                aria-label={`Skill ${skill.title}, ${isOpen ? 'terbuka' : 'tertutup'}`}
+                aria-label={`Skill ${skill.title}, ${isOpen ? 'menampilkan ikon' : 'tertutup'}`}
               >
                 <span className="skill-shadow ambient" aria-hidden="true" />
                 <span className="skill-shadow contact" aria-hidden="true" />
@@ -94,18 +170,19 @@ function Skills() {
                     <div className="paper-tab">
                       <p>{skill.tags.join(' · ')}</p>
                     </div>
-                    <span className="open-hint" aria-hidden="true">Ketuk untuk buka</span>
+                    <span className="open-hint" aria-hidden="true">Ketuk untuk lihat ikon</span>
                   </div>
 
-                  <div className="skill-inside">
+                  <div className="skill-icons">
                     <span className="page-rule" aria-hidden="true" />
                     <span className="skill-tag">{skill.number}</span>
                     <h3>{skill.title}</h3>
-                    <ul>
+                    <div className="skill-icon-grid">
                       {skill.tags.map((tag) => (
-                        <li key={tag}>{tag}</li>
+                        <SkillIcon key={tag} tag={tag} />
                       ))}
-                    </ul>
+                    </div>
+                    <span className="close-hint" aria-hidden="true">Ketuk untuk kembali</span>
                   </div>
                 </div>
               </div>

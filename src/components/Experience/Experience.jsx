@@ -99,7 +99,8 @@ function Experience() {
         </p>
 
         
-      </div>
+    </div>
+          </div>
       
           <div className="experience-item">
       <div className="experience-date">
@@ -116,7 +117,6 @@ function Experience() {
           Edit a lot of videos by using Adobe premiere pro.
         </p>
       </div>
-    </div>
 
       
       </div>

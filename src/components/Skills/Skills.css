@@ -65,7 +65,6 @@
 .skill-book {
   position: relative;
   aspect-ratio: 3 / 4;
-  perspective: 1400px;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   outline: none;
@@ -113,31 +112,21 @@
   opacity: 0.55;
 }
 
-/* bagian yang berputar buka/tutup — engsel di sisi kiri, kayak sampul buku */
+/* wadah untuk sampul & panel ikon — keduanya numpuk lalu saling crossfade */
 .skill-book-inner {
   position: relative;
   z-index: 1;
   width: 100%;
   height: 100%;
-  transform-style: preserve-3d;
-  transform-origin: left center;
-  transform: rotateY(0deg);
-  transition: transform 0.85s cubic-bezier(0.32, 1.05, 0.28, 1);
-  will-change: transform;
 }
 
-.skill-book.is-open .skill-book-inner {
-  transform: rotateY(-170deg);
-}
-
-/* ---------- dua "muka": sampul di depan, catatan di baliknya ---------- */
+/* ---------- dua "muka": sampul di depan, ikon di baliknya ---------- */
 .skill-cover,
-.skill-inside {
+.skill-icons {
   position: absolute;
   inset: 0;
   border-radius: 10px;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
+  transition: opacity 0.35s ease;
 }
 
 .skill-cover {
@@ -151,8 +140,14 @@
     0 22px 40px -20px rgba(43, 39, 33, 0.55),
     inset 0 0 0 1px rgba(255, 255, 255, 0.08);
   color: #f3ead9;
-  transform: rotateY(0deg);
   overflow: hidden;
+  opacity: 1;
+}
+
+/* sampul menghilang duluan saat buku "dibuka" */
+.skill-book.is-open .skill-cover {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .spine-ridge {
@@ -219,16 +214,20 @@
   color: rgba(243, 234, 217, 0.85);
 }
 
-.open-hint {
+.open-hint,
+.close-hint {
   position: absolute;
   right: 16px;
   bottom: 14px;
   font-size: 10px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: rgba(243, 234, 217, 0.55);
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+
+.open-hint {
+  color: rgba(243, 234, 217, 0.55);
 }
 
 .skill-book:hover .open-hint {
@@ -239,15 +238,30 @@
   opacity: 0;
 }
 
-/* halaman catatan di baliknya — tersembunyi sampai sampul terbuka */
-.skill-inside {
+.close-hint {
+  color: var(--sk-ink-faint);
+}
+
+.skill-book.show-icons:hover .close-hint {
+  opacity: 1;
+}
+
+/* panel ikon — tersembunyi sampai sampul menghilang */
+.skill-icons {
   padding: 26px 24px;
   background:
     repeating-linear-gradient(180deg, transparent 0 30px, var(--sk-hairline) 30px 31px),
     var(--sk-paper);
   color: var(--sk-ink);
-  transform: rotateY(180deg);
   box-shadow: inset 0 0 0 1px var(--sk-hairline);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ikon-ikon baru muncul setelah sampul benar-benar hilang */
+.skill-book.show-icons .skill-icons {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .page-rule {
@@ -260,7 +274,7 @@
   pointer-events: none;
 }
 
-.skill-inside .skill-tag {
+.skill-icons .skill-tag {
   position: relative;
   font-family: var(--sk-display);
   font-size: 12px;
@@ -268,7 +282,7 @@
   color: var(--sk-ink-faint);
 }
 
-.skill-inside h3 {
+.skill-icons h3 {
   position: relative;
   margin: 8px 0 16px;
   font-family: var(--sk-display);
@@ -276,22 +290,61 @@
   font-size: clamp(20px, 2.2vw, 26px);
 }
 
-.skill-inside ul {
+.skill-icon-grid {
   position: relative;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 14px;
 }
 
-.skill-inside li {
-  padding: 8px 0;
-  border-top: 1px solid var(--sk-hairline);
-  font-size: 14px;
-  letter-spacing: 0.01em;
+.skill-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 54px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.skill-inside li:first-child {
-  border-top: none;
+/* setiap ikon nongol satu-satu, bukan barengan */
+.skill-book.show-icons .skill-icon {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.skill-icon-grid .skill-icon:nth-child(1) { transition-delay: 0.02s; }
+.skill-icon-grid .skill-icon:nth-child(2) { transition-delay: 0.08s; }
+.skill-icon-grid .skill-icon:nth-child(3) { transition-delay: 0.14s; }
+.skill-icon-grid .skill-icon:nth-child(4) { transition-delay: 0.2s; }
+.skill-icon-grid .skill-icon:nth-child(5) { transition-delay: 0.26s; }
+.skill-icon-grid .skill-icon:nth-child(6) { transition-delay: 0.32s; }
+
+.skill-icon-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.skill-icon-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--sk-paper-deep);
+  color: var(--sk-ink-soft);
+  font-family: var(--sk-display);
+  font-size: 12px;
+}
+
+.skill-icon-label {
+  font-size: 10.5px;
+  line-height: 1.3;
+  text-align: center;
+  color: var(--sk-ink-soft);
 }
 
 /* ---------- alas rak ---------- */
@@ -312,10 +365,11 @@
     gap: 22px 16px;
   }
   .skill-cover,
-  .skill-inside {
+  .skill-icons {
     padding: 18px 16px;
   }
-  .open-hint {
+  .open-hint,
+  .close-hint {
     display: none;
   }
 }
@@ -328,9 +382,12 @@
 
 @media (prefers-reduced-motion: reduce) {
   .skill-book,
-  .skill-book-inner,
   .paper-tab,
-  .open-hint {
+  .open-hint,
+  .close-hint,
+  .skill-cover,
+  .skill-icons,
+  .skill-icon {
     transition: none !important;
   }
 }
