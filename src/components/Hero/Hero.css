@@ -382,7 +382,7 @@
 .hero-reveal__next {
   position: absolute;
   inset: 0;
-  background: #000000;
+  background: #ece7dc;
   z-index: 0;
 }
 
@@ -425,7 +425,7 @@
   font-size: clamp(5rem, 2.4vw, 1.4rem); /* FIX: urutan min < max dibenerin */
   line-height: 1.25;
   letter-spacing: 0.02em;
-  color: #ffffff;
+  color: #000000;
   pointer-events: none;
   will-change: opacity, transform;
 }

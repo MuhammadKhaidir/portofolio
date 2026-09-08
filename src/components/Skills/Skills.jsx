@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './Skills.css'
 
 function Skills() {
@@ -5,24 +6,37 @@ function Skills() {
     {
       number: '01',
       title: 'Frontend',
-      description: 'HTML, CSS, JavaScript, React, Next.js',
+      tags: ['HTML', 'CSS', 'JavaScript', 'React', 'Next.js'],
     },
     {
       number: '02',
       title: 'Backend',
-      description: 'Java, Node.js, PHP, Laravel',
+      tags: ['Java', 'Node.js', 'PHP', 'Laravel'],
     },
     {
       number: '03',
       title: 'Database',
-      description: 'SQL, MySQL, MariaDB',
+      tags: ['SQL', 'MySQL', 'MariaDB'],
     },
     {
       number: '04',
       title: 'Tools',
-      description: 'Git, GitHub, VS Code, Figma',
+      tags: ['Git', 'GitHub', 'VS Code', 'Figma'],
     },
   ]
+
+  const [openBook, setOpenBook] = useState(null)
+
+  const toggleBook = (number) => {
+    setOpenBook((prev) => (prev === number ? null : number))
+  }
+
+  const handleKeyDown = (e, number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      toggleBook(number)
+    }
+  }
 
   return (
     <section id="skills" className="skills section">
@@ -31,14 +45,41 @@ function Skills() {
         <h2>Skills</h2>
       </div>
 
-      <div className="skills-grid">
-        {skills.map((skill) => (
-          <div className="skill-card" key={skill.number}>
-            <span>{skill.number}</span>
-            <h3>{skill.title}</h3>
-            <p>{skill.description}</p>
-          </div>
-        ))}
+      <div className="shelf">
+        <div className="skills-grid">
+          {skills.map((skill) => (
+            <div
+              key={skill.number}
+              className={`skill-book${openBook === skill.number ? ' is-open' : ''}`}
+              onClick={() => toggleBook(skill.number)}
+              onKeyDown={(e) => handleKeyDown(e, skill.number)}
+              role="button"
+              tabIndex={0}
+              aria-pressed={openBook === skill.number}
+            >
+              <div className="skill-book-inner">
+                <div className="skill-cover">
+                  <span className="spine-ridge" aria-hidden="true" />
+                  <span className="skill-tag">{skill.number}</span>
+                  <h3>{skill.title}</h3>
+                  <div className="paper-tab">
+                    <p>{skill.tags.join(', ')}</p>
+                  </div>
+                </div>
+                <div className="skill-inside">
+                  <span className="skill-tag">{skill.number}</span>
+                  <h3>{skill.title}</h3>
+                  <ul>
+                    {skill.tags.map((tag) => (
+                      <li key={tag}>{tag}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="shelf-ledge" aria-hidden="true" />
       </div>
     </section>
   )
