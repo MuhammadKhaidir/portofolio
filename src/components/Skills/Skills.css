@@ -1,72 +1,157 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
+/* Skills.css — rak buku keterampilan, gaya sketchbook (implementasi orisinal) */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Newsreader:wght@300;400;500;600&display=swap');
 
 .skills {
-  background: radial-gradient(ellipse at 50% -10%, #2a1d12 0%, #171310 55%, #100d0a 100%);
-  padding-bottom: 56px;
+  --sk-paper: #ece7dc;
+  --sk-paper-deep: #d9cfb4;
+  --sk-ink: #2b2721;
+  --sk-ink-soft: rgba(43, 39, 33, 0.62);
+  --sk-ink-faint: rgba(43, 39, 33, 0.38);
+  --sk-hairline: rgba(43, 39, 33, 0.14);
+  --sk-earth: #9a6a3e;
+  --sk-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --sk-font: 'Newsreader', Georgia, 'Times New Roman', serif;
+
+  padding: clamp(56px, 9vw, 110px) clamp(20px, 5vw, 64px);
+  background: linear-gradient(180deg, #f4f0e6 0%, #ece7dc 100%);
+  color: var(--sk-ink);
+  font-family: var(--sk-font);
 }
 
+.skills .section-title {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  max-width: 1100px;
+  margin: 0 auto 48px;
+}
+
+.skills .section-title span {
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  color: var(--sk-ink-faint);
+  text-transform: uppercase;
+}
+
+.skills .section-title h2 {
+  margin: 0;
+  font-family: var(--sk-display);
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 42px);
+  letter-spacing: 0.01em;
+}
+
+/* ---------- rak tempat buku duduk ---------- */
 .shelf {
-  padding: 10px 0 0;
+  position: relative;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(30px, 5vw, 56px) clamp(16px, 4vw, 40px) 70px;
+  border-radius: 22px;
+  background:
+    radial-gradient(120% 90% at 50% -10%, rgba(255, 252, 244, 0.55), transparent 60%),
+    var(--sk-paper);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 0 10px 34px;
-  perspective: 1600px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: clamp(28px, 4vw, 46px) clamp(22px, 3vw, 34px);
 }
 
+/* ---------- satu buku ---------- */
 .skill-book {
-  min-height: 250px;
+  position: relative;
+  aspect-ratio: 3 / 4;
+  perspective: 1400px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   outline: none;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.skill-book:focus-visible .skill-book-inner {
-  box-shadow: 0 0 0 2px #b6893f;
-  border-radius: 4px;
+.skill-book:hover,
+.skill-book:focus-visible {
+  transition: transform 0.12s ease-out;
 }
 
+.skill-book:focus-visible .skill-cover {
+  box-shadow:
+    0 0 0 2px var(--sk-earth),
+    0 18px 30px -14px rgba(43, 39, 33, 0.5);
+}
+
+/* bayangan lembut yang "menempel" ke rak */
+.skill-shadow {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: -8%;
+  height: 26%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.skill-shadow.ambient {
+  background: radial-gradient(50% 50% at 50% 50%, rgba(58, 44, 26, 0.28), transparent 72%);
+  filter: blur(18px);
+  transition: opacity 0.4s ease;
+}
+
+.skill-shadow.contact {
+  bottom: -3%;
+  height: 12%;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(44, 32, 14, 0.35), transparent 78%);
+  filter: blur(6px);
+}
+
+.skill-book.is-open .skill-shadow.ambient {
+  opacity: 0.55;
+}
+
+/* bagian yang berputar buka/tutup — engsel di sisi kiri, kayak sampul buku */
 .skill-book-inner {
   position: relative;
-  min-height: 250px;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
   transform-style: preserve-3d;
-  transition:
-    transform 0.6s cubic-bezier(0.4, 0.1, 0.2, 1),
-    translate 0.3s ease;
-}
-
-.skill-book:hover .skill-book-inner {
-  translate: 0 -8px;
+  transform-origin: left center;
+  transform: rotateY(0deg);
+  transition: transform 0.85s cubic-bezier(0.32, 1.05, 0.28, 1);
+  will-change: transform;
 }
 
 .skill-book.is-open .skill-book-inner {
-  transform: rotateY(180deg);
+  transform: rotateY(-170deg);
 }
 
+/* ---------- dua "muka": sampul di depan, catatan di baliknya ---------- */
 .skill-cover,
 .skill-inside {
   position: absolute;
   inset: 0;
+  border-radius: 10px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  border-radius: 2px;
-  padding: 30px 26px;
 }
 
 .skill-cover {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 22px 22px;
   background:
-    repeating-linear-gradient(
-      118deg,
-      rgba(255, 255, 255, 0.025) 0px,
-      rgba(255, 255, 255, 0.025) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    linear-gradient(155deg, #33220f 0%, #1c130c 100%);
-  border: 1px solid #3a2716;
-  box-shadow: 0 16px 26px -12px rgba(0, 0, 0, 0.65);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.14), transparent 40%),
+    linear-gradient(135deg, var(--sk-earth) 0%, #7c5230 100%);
+  box-shadow:
+    0 22px 40px -20px rgba(43, 39, 33, 0.55),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  color: #f3ead9;
+  transform: rotateY(0deg);
   overflow: hidden;
 }
 
@@ -76,115 +161,176 @@
   top: 0;
   bottom: 0;
   width: 14px;
-  background: repeating-linear-gradient(
-    to bottom,
-    #241809 0px,
-    #241809 6px,
-    #2f1f10 6px,
-    #2f1f10 8px
+  background:
+    repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0 2px, transparent 2px 5px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.28), transparent);
+}
+
+.cover-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.5) 0 1px,
+    transparent 1px 3px
   );
-  border-right: 1px solid #100b06;
 }
 
-.skill-tag {
-  display: block;
-  color: #b6893f;
-  font-size: 12px;
-  letter-spacing: 1px;
-  margin-left: 18px;
+.skill-cover .skill-tag {
+  position: relative;
+  font-family: var(--sk-display);
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  opacity: 0.75;
 }
 
-.skill-cover h3,
-.skill-inside h3 {
-  font-family: 'Fraunces', serif;
-  font-weight: 600;
-  font-size: 26px;
-  margin: 60px 0 0 18px;
-  color: #e9dabc;
-}
-
-.skill-inside h3 {
-  margin-top: 6px;
-  margin-left: 0;
+.skill-cover h3 {
+  position: relative;
+  margin: auto 0 0;
+  font-family: var(--sk-display);
+  font-weight: 400;
+  font-size: clamp(24px, 2.6vw, 32px);
+  letter-spacing: 0.01em;
 }
 
 .paper-tab {
-  position: absolute;
-  left: 14px;
-  right: 0;
-  bottom: 0;
-  padding: 16px 22px 18px;
-  background: #efe4cf;
-  clip-path: polygon(
-    0 12px, 7% 2px, 15% 11px, 23% 1px, 31% 9px, 39% 0, 47% 8px,
-    55% 1px, 63% 10px, 71% 2px, 79% 9px, 87% 0, 95% 7px, 100% 2px,
-    100% 100%, 0 100%
-  );
-  transform: translateY(100%);
-  transition: transform 0.35s ease;
-  box-shadow: 0 -8px 16px rgba(0, 0, 0, 0.35);
+  position: relative;
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.28);
+  transform: translateY(6px);
+  opacity: 0.85;
+  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
-.skill-book:hover .paper-tab,
-.skill-book:focus-visible .paper-tab {
+.skill-book:hover .paper-tab {
   transform: translateY(0);
+  opacity: 1;
 }
 
 .paper-tab p {
   margin: 0;
-  color: #4a3a26;
-  font-size: 12px;
-  line-height: 1.6;
+  font-size: 12.5px;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  color: rgba(243, 234, 217, 0.85);
 }
 
+.open-hint {
+  position: absolute;
+  right: 16px;
+  bottom: 14px;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(243, 234, 217, 0.55);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.skill-book:hover .open-hint {
+  opacity: 1;
+}
+
+.skill-book.is-open .open-hint {
+  opacity: 0;
+}
+
+/* halaman catatan di baliknya — tersembunyi sampai sampul terbuka */
 .skill-inside {
-  background: linear-gradient(155deg, #241810 0%, #150e08 100%);
-  border: 1px solid #3a2716;
+  padding: 26px 24px;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 30px, var(--sk-hairline) 30px 31px),
+    var(--sk-paper);
+  color: var(--sk-ink);
   transform: rotateY(180deg);
+  box-shadow: inset 0 0 0 1px var(--sk-hairline);
+}
+
+.page-rule {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 18%;
+  background: linear-gradient(90deg, rgba(43, 39, 33, 0.14), transparent);
+  pointer-events: none;
+}
+
+.skill-inside .skill-tag {
+  position: relative;
+  font-family: var(--sk-display);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: var(--sk-ink-faint);
+}
+
+.skill-inside h3 {
+  position: relative;
+  margin: 8px 0 16px;
+  font-family: var(--sk-display);
+  font-weight: 400;
+  font-size: clamp(20px, 2.2vw, 26px);
 }
 
 .skill-inside ul {
-  list-style: none;
-  margin: 14px 0 0;
+  position: relative;
+  margin: 0;
   padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  list-style: none;
 }
 
 .skill-inside li {
-  color: #cbb896;
-  font-size: 12px;
-  border: 1px solid #4a3524;
-  border-radius: 2px;
-  padding: 4px 10px;
+  padding: 8px 0;
+  border-top: 1px solid var(--sk-hairline);
+  font-size: 14px;
+  letter-spacing: 0.01em;
 }
 
+.skill-inside li:first-child {
+  border-top: none;
+}
+
+/* ---------- alas rak ---------- */
 .shelf-ledge {
-  height: 24px;
-  margin: 0 10px;
-  background: linear-gradient(180deg, #4a3016 0%, #2a1a0c 100%);
-  border-radius: 2px;
-  box-shadow:
-    0 10px 18px rgba(0, 0, 0, 0.5),
-    inset 0 2px 0 rgba(255, 255, 255, 0.05);
+  position: absolute;
+  left: 4%;
+  right: 4%;
+  bottom: 18px;
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--sk-paper), var(--sk-paper-deep));
+  box-shadow: 0 10px 18px -8px rgba(43, 39, 33, 0.35);
 }
 
-@media (max-width: 900px) {
+@media (max-width: 640px) {
   .skills-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 22px 16px;
+  }
+  .skill-cover,
+  .skill-inside {
+    padding: 18px 16px;
+  }
+  .open-hint {
+    display: none;
   }
 }
 
-@media (max-width: 500px) {
-  .skills-grid {
-    grid-template-columns: 1fr;
+@media (pointer: coarse) {
+  .skill-book {
+    transform: none !important;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .skill-book,
   .skill-book-inner,
-  .paper-tab {
-    transition: none;
+  .paper-tab,
+  .open-hint {
+    transition: none !important;
   }
 }
