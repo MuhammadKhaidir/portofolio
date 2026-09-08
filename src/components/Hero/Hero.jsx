@@ -8,6 +8,7 @@ import idleGif from '../../assets/IdleChar.gif'
 import leftHeroImg from '../../assets/LeftHero.png'
 import rightHeroImg from '../../assets/RightHero.png'
 import rockImg from '../../assets/Rock.png'
+import { AshenPress } from "@designcodeio/threeui";
 
 
 const clamp = (v, a, b) => (v < a ? a : v > b ? b : v)
