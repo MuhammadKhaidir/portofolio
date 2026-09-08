@@ -14,8 +14,25 @@
   gap: 25px;
 }
 
+.footer a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-icon {
+  width: 14px;
+  height: 14px;
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
 .footer a:hover {
   color: white;
+}
+
+.footer a:hover .footer-icon {
+  opacity: 1;
 }
 
 @media (max-width: 600px) {
