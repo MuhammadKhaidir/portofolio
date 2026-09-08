@@ -2,6 +2,10 @@
   background: #111;
 }
 
+.experience .section-title h2 {
+  color: #fff;
+}
+
 .experience-item {
   display: grid;
   grid-template-columns: 200px 1fr;

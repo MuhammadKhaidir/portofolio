@@ -1,3 +1,7 @@
+.projects .section-title h2 {
+  color: #fff;
+}
+
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -5,7 +9,7 @@
 }
 
 .project-card {
-  border: 1px solid #292929;
+  border: 1px solid #d5b1b1;
   transition: 0.3s;
 }
 

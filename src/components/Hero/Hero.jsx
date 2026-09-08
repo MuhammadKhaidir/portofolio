@@ -54,8 +54,13 @@ function Hero() {
     const pText = clamp((raw - WIPE_RATIO) / (1 - WIPE_RATIO), 0, 1)
     const feather = featherRef.current
 
-    if (heroRef.current) {
-      const center = pWipe * 100
+     if (heroRef.current) {
+      // margin ekstra (dalam %) biar zona feather-nya kelar duluan
+      // sebelum nyentuh tepi box, jadi pWipe=0 -> full opaque semua,
+      // pWipe=1 -> full transparent semua (gak nyisa/gak setengah)
+      const marginPct = (feather / (window.innerWidth || 1)) * 100
+      const center = -marginPct + pWipe * (100 + marginPct * 2)
+
       const mask = `linear-gradient(to right,
         rgba(0,0,0,0) 0%,
         rgba(0,0,0,0) calc(${center}% - ${feather}px),
